@@ -1,14 +1,9 @@
 import axios from 'axios';
 
-// ============================================
-// API URL - Dynamic for Netlify + Vercel
-// ============================================
 const getApiUrl = () => {
-  // Production (Netlify)
   if (import.meta.env.PROD) {
-    return 'https://ssfinworld-backend.vercel.app/api';
+    return 'https://ssfin-backend.vercel.app/';
   }
-  // Development
   return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 };
 
@@ -19,9 +14,11 @@ console.log('✅ API URL:', API_URL);
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
   },
-  timeout: 30000
+  timeout: 30000,
+  withCredentials: true // Important for CORS
 });
 
 // Request interceptor
@@ -45,6 +42,7 @@ apiClient.interceptors.response.use(
         window.location.href = '/';
       }
     }
+    console.error('API Error:', error.message);
     return Promise.reject(error);
   }
 );
