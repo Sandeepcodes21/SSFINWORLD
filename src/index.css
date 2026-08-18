@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+
+  /* Smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-manrope bg-[#0c0b0a] text-[#f4ede0] overflow-x-hidden min-h-screen relative;
+  }
+
+  /* Hindi Font Support */
+  .font-hindi {
+    font-family: 'Noto Sans Devanagari', 'Segoe UI', sans-serif;
+  }
+
+  /* Background gradients */
+  body::before {
+    content: '';
+    @apply fixed inset-0 pointer-events-none z-0;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(232, 156, 62, 0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(245, 184, 0, 0.05), transparent 40%);
+  }
+
+  body::after {
+    content: '';
+    @apply fixed inset-0 pointer-events-none z-0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+}
+
+@layer base {
+
+  /* Smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-manrope bg-[#0c0b0a] text-[#f4ede0] overflow-x-hidden min-h-screen relative;
+  }
+
+  /* Background gradients */
+  body::before {
+    content: '';
+    @apply fixed inset-0 pointer-events-none z-0;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(232, 156, 62, 0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(245, 184, 0, 0.05), transparent 40%);
+  }
+
+  body::after {
+    content: '';
+    @apply fixed inset-0 pointer-events-none z-0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+}
+
+@layer utilities {
+
+  /* Scrollbar */
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: #0c0b0a;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background: #28241c;
+    border-radius: 4px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: #e89c3e;
+  }
+
+  /* Animation Utilities */
+  .animate-pulse-slow {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-shake {
+    animation: shake 0.4s;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.6;
+      transform: scale(1.3);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes shake {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    25% {
+      transform: translateX(-4px);
+    }
+
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+
+    33% {
+      transform: translateY(-20px) rotate(5deg);
+    }
+
+    66% {
+      transform: translateY(10px) rotate(-3deg);
+    }
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
