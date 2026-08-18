@@ -1,15 +1,19 @@
 import axios from 'axios';
 
+// ============================================
+// API URL - SAHI KAREIN
+// ============================================
 const getApiUrl = () => {
   if (import.meta.env.PROD) {
-    return 'https://ssfin-backend.vercel.app/';
+    // ✅ CORRECT - /api add karein
+    return 'https://ssfin-backend.vercel.app/api';
   }
   return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 };
 
 const API_URL = getApiUrl();
 
-console.log('✅ API URL:', API_URL);
+console.log('✅ API URL:', API_URL); // https://ssfin-backend.vercel.app/api
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -18,7 +22,8 @@ const apiClient = axios.create({
     'Accept': 'application/json'
   },
   timeout: 30000,
-  withCredentials: true // Important for CORS
+  // ⚠️ withCredentials false karein jab tak CORS fix na ho
+  withCredentials: false 
 });
 
 // Request interceptor
@@ -27,12 +32,16 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  console.log('📤 Request:', config.method.toUpperCase(), config.url);
   return config;
 });
 
 // Response interceptor
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('📥 Response:', response.status, response.config.url);
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       sessionStorage.removeItem('ssfinworld_token');
@@ -42,7 +51,11 @@ apiClient.interceptors.response.use(
         window.location.href = '/';
       }
     }
-    console.error('API Error:', error.message);
+    console.error('❌ API Error:', error.message);
+    if (error.response) {
+      console.error('   Status:', error.response.status);
+      console.error('   Data:', error.response.data);
+    }
     return Promise.reject(error);
   }
 );
