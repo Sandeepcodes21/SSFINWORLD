@@ -212,72 +212,8 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
     showToast("Form cleared", "info");
   };
 
-  // ============================================
-  // FORM FIELDS - ALL MANUAL INPUT
-  // ============================================
-  const formFields = [
-    {
-      id: "title",
-      label: "Car Title / Model Name",
-      icon: Car,
-      placeholder: "e.g. Hyundai Creta SX",
-      type: "text",
-    },
-    {
-      id: "brand",
-      label: "Brand",
-      icon: Shield,
-      placeholder: "e.g. Hyundai, Toyota, BMW",
-      type: "text",
-    },
-    {
-      id: "year",
-      label: "Year",
-      icon: Calendar,
-      placeholder: "2022",
-      type: "number",
-      min: 1990,
-      max: 2026,
-    },
-    {
-      id: "price",
-      label: "Price (₹)",
-      icon: DollarSign,
-      placeholder: "850000",
-      type: "number",
-    },
-    {
-      id: "km",
-      label: "KM Driven",
-      icon: Gauge,
-      placeholder: "45000",
-      type: "number",
-    },
-    {
-      id: "fuel",
-      label: "Fuel Type",
-      icon: Fuel,
-      placeholder: "e.g. Petrol, Diesel, Electric",
-      type: "text",
-    },
-    {
-      id: "trans",
-      label: "Transmission",
-      icon: Cog,
-      placeholder: "e.g. Manual, Automatic, CVT",
-      type: "text",
-    },
-    {
-      id: "owner",
-      label: "Ownership",
-      icon: User,
-      placeholder: "e.g. 1st Owner, 2nd Owner",
-      type: "text",
-    },
-  ];
-
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-11 max-w-[1000px] relative overflow-hidden shadow-xl shadow-slate-200/50">
+    <div className="w-full bg-white border border-slate-200/80 rounded-2xl p-6 md:p-8 lg:p-10 relative overflow-hidden shadow-xl shadow-slate-200/50">
       {/* Top Gradient Border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600"></div>
 
@@ -286,8 +222,8 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
       <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Form Header */}
-      <div className="flex items-center gap-3 mb-8 relative">
-        <div className="w-11 h-11 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-[#d97706] shadow-sm">
+      <div className="flex flex-wrap items-center gap-3 mb-8 relative">
+        <div className="w-11 h-11 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-[#d97706] shadow-sm flex-shrink-0">
           <Car className="w-5 h-5" />
         </div>
         <div>
@@ -308,34 +244,183 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {formFields.map((field) => (
-            <div key={field.id} className="flex flex-col gap-2 group">
-              <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
-                {field.icon && (
-                  <field.icon className="w-3.5 h-3.5 text-[#d97706]" />
-                )}
-                {field.label}
-                <span className="text-rose-500">*</span>
-              </label>
-
-              <div className="relative">
-                <input
-                  type={field.type}
-                  id={field.id}
-                  value={formData[field.id]}
-                  onChange={handleChange}
-                  placeholder={field.placeholder}
-                  min={field.min}
-                  max={field.max}
-                  className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
-                  required
-                />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
-                  <field.icon className="w-4 h-4" />
-                </div>
+          {/* Title - Full Width on Mobile, Half on Desktop */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <Car className="w-3.5 h-3.5 text-[#d97706]" />
+              Car Title / Model Name *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="e.g. Hyundai Creta SX"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <Car className="w-4 h-4" />
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Brand */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <Shield className="w-3.5 h-3.5 text-[#d97706]" />
+              Brand *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="brand"
+                value={formData.brand}
+                onChange={handleChange}
+                placeholder="e.g. Hyundai, Toyota, BMW"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <Shield className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Year */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <Calendar className="w-3.5 h-3.5 text-[#d97706]" />
+              Year *
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                id="year"
+                value={formData.year}
+                onChange={handleChange}
+                placeholder="2022"
+                min={1990}
+                max={2026}
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <Calendar className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Price */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <DollarSign className="w-3.5 h-3.5 text-[#d97706]" />
+              Price (₹) *
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                id="price"
+                value={formData.price}
+                onChange={handleChange}
+                placeholder="850000"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <DollarSign className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* KM Driven */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <Gauge className="w-3.5 h-3.5 text-[#d97706]" />
+              KM Driven *
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                id="km"
+                value={formData.km}
+                onChange={handleChange}
+                placeholder="45000"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <Gauge className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Fuel Type */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <Fuel className="w-3.5 h-3.5 text-[#d97706]" />
+              Fuel Type *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="fuel"
+                value={formData.fuel}
+                onChange={handleChange}
+                placeholder="e.g. Petrol, Diesel, Electric"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <Fuel className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Transmission */}
+          <div className="flex flex-col gap-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <Cog className="w-3.5 h-3.5 text-[#d97706]" />
+              Transmission *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="trans"
+                value={formData.trans}
+                onChange={handleChange}
+                placeholder="e.g. Manual, Automatic, CVT"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <Cog className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Ownership */}
+          <div className="flex flex-col gap-2 group md:col-span-2 lg:col-span-1">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <User className="w-3.5 h-3.5 text-[#d97706]" />
+              Ownership *
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="owner"
+                value={formData.owner}
+                onChange={handleChange}
+                placeholder="e.g. 1st Owner, 2nd Owner"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                required
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                <User className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
 
           {/* Description - Full Width */}
           <div className="flex flex-col gap-2 md:col-span-2 group">
