@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import {
+  Cloud,
   Check,
   RotateCcw,
   X,
@@ -7,18 +8,16 @@ import {
   Image as ImageIcon,
   Car,
   Calendar,
-  IndianRupee,
+  DollarSign,
   Gauge,
   Fuel,
+  Cog,
   User,
   FileText,
   Sparkles,
-  ShieldCheck,
-  Loader2,
-  ChevronDown,
+  Shield,
   Info,
-  CheckCircle2,
-  Trash2,
+  Loader2,
 } from "lucide-react";
 import { uploadMultipleImages } from "../utils/cloudinary";
 
@@ -29,20 +28,23 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
     year: "",
     price: "",
     km: "",
-    fuel: "Petrol",
-    owner: "1st Owner",
+    fuel: "",
+    trans: "",
+    owner: "",
     desc: "",
   });
-
   const [images, setImages] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
-
   const fileInputRef = useRef(null);
+  const dropzoneRef = useRef(null);
 
+  // ============================================
+  // MANUAL INPUT HANDLERS - No dropdowns
+  // ============================================
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
@@ -53,23 +55,41 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
       f.type.startsWith("image/"),
     );
     if (!imageFiles.length) {
-      showToast("Kripya image files select karein", "error");
+      showToast("Please image files select karein", "error");
       return;
     }
 
+    // Validate file sizes
+    for (const file of imageFiles) {
+      if (file.size > 5 * 1024 * 1024) {
+        showToast(`${file.name} too large (max 5MB)`, "error");
+        return;
+      }
+    }
+
+    // Show previews immediately
     const previews = imageFiles.map((file) => URL.createObjectURL(file));
     setImages((prev) => [...prev, ...previews]);
 
+    // Upload to Cloudinary
     setUploading(true);
-    setUploadProgress(20);
+    setUploadProgress(0);
 
     try {
       const urls = await uploadMultipleImages(imageFiles);
       setImageUrls((prev) => [...prev, ...urls]);
       setUploadProgress(100);
-      showToast(`${imageFiles.length} images upload ho gayi!`, "success");
+
+      // Revoke object URLs after upload
+      previews.forEach((url) => URL.revokeObjectURL(url));
+
+      showToast(
+        `${imageFiles.length} images uploaded successfully!`,
+        "success",
+      );
     } catch (error) {
-      showToast("Image upload fail ho gaya.", "error");
+      showToast("Image upload failed. Please try again.", "error");
+      // Remove failed upload previews
       setImages((prev) => prev.slice(0, prev.length - imageFiles.length));
     } finally {
       setUploading(false);
@@ -81,30 +101,93 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
     setImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (!isAdmin) {
+      showToast("Pehle admin login karein!", "error");
+      return;
+    }
+    await handleFileSelect(e.dataTransfer.files);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAdmin) {
       showToast("Pehle admin login karein!", "error");
       return;
     }
+
     if (!imageUrls.length) {
       showToast("Kam se kam 1 image upload karein", "error");
       return;
     }
 
+    const { title, year, price, km } = formData;
+    if (!title || !year || !price || !km) {
+      showToast("Sabhi fields fill karein", "error");
+      return;
+    }
+
+    const yearNum = parseInt(year);
+    const priceNum = parseInt(price);
+    const kmNum = parseInt(km);
+    if (yearNum < 1990 || yearNum > 2026) {
+      showToast("Year 1990 se 2026 ke beech hona chahiye", "error");
+      return;
+    }
+    if (priceNum <= 0 || kmNum < 0) {
+      showToast("Price aur KM valid values enter karein", "error");
+      return;
+    }
+
     setIsSubmitting(true);
+
     try {
       const newCar = {
-        ...formData,
-        year: parseInt(formData.year),
-        price: parseInt(formData.price),
-        km: parseInt(formData.km),
+        title: formData.title.trim(),
+        brand: formData.brand.trim(),
+        year: yearNum,
+        price: priceNum,
+        km: kmNum,
+        fuel: formData.fuel.trim(),
+        trans: formData.trans.trim(),
+        owner: formData.owner.trim(),
+        desc: formData.desc.trim(),
         images: imageUrls,
       };
+
       await onAddCar(newCar);
-      handleReset();
+
+      // Reset form
+      setFormData({
+        title: "",
+        brand: "",
+        year: "",
+        price: "",
+        km: "",
+        fuel: "",
+        trans: "",
+        owner: "",
+        desc: "",
+      });
+      setImages([]);
+      setImageUrls([]);
+      setUploadProgress(0);
     } catch (error) {
-      showToast(error.message || "Listing add nahi ho payi.", "error");
+      showToast(
+        error.message || "Failed to publish listing. Please try again.",
+        "error",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -117,377 +200,352 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
       year: "",
       price: "",
       km: "",
-      fuel: "Petrol",
-      owner: "1st Owner",
+      fuel: "",
+      trans: "",
+      owner: "",
       desc: "",
     });
     setImages([]);
     setImageUrls([]);
+    setUploadProgress(0);
     if (onReset) onReset();
+    showToast("Form cleared", "info");
   };
 
+  // ============================================
+  // FORM FIELDS - ALL MANUAL INPUT
+  // ============================================
+  const formFields = [
+    {
+      id: "title",
+      label: "Car Title / Model Name",
+      icon: Car,
+      placeholder: "e.g. Hyundai Creta SX",
+      type: "text",
+    },
+    {
+      id: "brand",
+      label: "Brand",
+      icon: Shield,
+      placeholder: "e.g. Hyundai, Toyota, BMW",
+      type: "text",
+    },
+    {
+      id: "year",
+      label: "Year",
+      icon: Calendar,
+      placeholder: "2022",
+      type: "number",
+      min: 1990,
+      max: 2026,
+    },
+    {
+      id: "price",
+      label: "Price (₹)",
+      icon: DollarSign,
+      placeholder: "850000",
+      type: "number",
+    },
+    {
+      id: "km",
+      label: "KM Driven",
+      icon: Gauge,
+      placeholder: "45000",
+      type: "number",
+    },
+    {
+      id: "fuel",
+      label: "Fuel Type",
+      icon: Fuel,
+      placeholder: "e.g. Petrol, Diesel, Electric",
+      type: "text",
+    },
+    {
+      id: "trans",
+      label: "Transmission",
+      icon: Cog,
+      placeholder: "e.g. Manual, Automatic, CVT",
+      type: "text",
+    },
+    {
+      id: "owner",
+      label: "Ownership",
+      icon: User,
+      placeholder: "e.g. 1st Owner, 2nd Owner",
+      type: "text",
+    },
+  ];
+
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 py-6 md:px-8">
-      {/* Header Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-6 rounded-3xl border border-amber-500/20 backdrop-blur-sm">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20 font-bold">
-            <Car className="w-7 h-7" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-              Publish New Vehicle
-            </h1>
-            <p className="text-slate-500 text-xs sm:text-sm font-medium mt-0.5">
-              Fill in details below to list a new vehicle in your catalog
-            </p>
-          </div>
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-11 max-w-[1000px] relative overflow-hidden shadow-xl shadow-slate-200/50">
+      {/* Top Gradient Border */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600"></div>
+
+      {/* Background Subtle Blur Decoration */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      {/* Form Header */}
+      <div className="flex items-center gap-3 mb-8 relative">
+        <div className="w-11 h-11 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-[#d97706] shadow-sm">
+          <Car className="w-5 h-5" />
         </div>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-700 text-xs font-bold tracking-wide">
-          <Sparkles className="w-4 h-4 text-amber-600" /> ADMIN PANEL
+        <div>
+          <h3 className="font-syne font-bold text-xl text-slate-900">
+            Add New Listing
+          </h3>
+          <p className="text-slate-500 text-xs font-medium">
+            Fill in the details to publish your car listing
+          </p>
+        </div>
+        <div className="ml-auto flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+            Premium Listing
+          </span>
         </div>
       </div>
 
-      {/* Grid Layout: Left Live Preview + Right Form */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Side: Live Preview & Tips */}
-        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
-          {/* Live Preview Card */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xl shadow-slate-200/50 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                Live Preview
-              </span>
-              <span className="text-[10px] font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-                Realtime
-              </span>
-            </div>
-
-            <div className="h-44 bg-slate-100 rounded-2xl overflow-hidden relative border border-slate-200/60 flex items-center justify-center">
-              {images[0] ? (
-                <img
-                  src={images[0]}
-                  alt="Car Preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="text-slate-400 flex flex-col items-center gap-2">
-                  <ImageIcon className="w-8 h-8 stroke-1" />
-                  <span className="text-xs font-medium">
-                    Image preview zone
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded">
-                {formData.brand || "BRAND"}
-              </span>
-              <h4 className="font-bold text-slate-900 text-lg mt-1 truncate">
-                {formData.title || "Vehicle Title Here"}
-              </h4>
-              <p className="text-amber-600 font-extrabold text-xl mt-1">
-                ₹{" "}
-                {formData.price
-                  ? Number(formData.price).toLocaleString("en-IN")
-                  : "0"}
-              </p>
-
-              <div className="flex flex-wrap gap-2 text-[11px] text-slate-600 font-medium mt-3 pt-3 border-t border-slate-100">
-                <span className="bg-slate-100 px-2.5 py-1 rounded-lg">
-                  {formData.year || "YYYY"}
-                </span>
-                <span className="bg-slate-100 px-2.5 py-1 rounded-lg">
-                  {formData.fuel}
-                </span>
-                <span className="bg-slate-100 px-2.5 py-1 rounded-lg">
-                  {formData.km ? `${formData.km} KM` : "0 KM"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Tips Card */}
-          <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden">
-            <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
-            <h3 className="text-base font-bold mb-3 flex items-center gap-2 text-amber-400">
-              <Info className="w-4 h-4" /> Best Practices
-            </h3>
-            <ul className="space-y-2.5 text-slate-300 text-xs font-medium">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>
-                  Upload high-resolution images taken in proper lighting.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>
-                  Specify precise variant name along with model title.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Right Side: Main Form Container */}
-        <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Title */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Car className="w-3.5 h-3.5 text-amber-600" /> Car Title /
-                  Model *
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  placeholder="e.g. Hyundai Creta SX (O)"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium transition-all"
-                  required
-                />
-              </div>
-
-              {/* Brand */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-amber-600" /> Brand *
-                </label>
-                <input
-                  type="text"
-                  id="brand"
-                  value={formData.brand}
-                  onChange={handleChange}
-                  placeholder="e.g. Hyundai, Tata, Mahindra"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium transition-all"
-                  required
-                />
-              </div>
-
-              {/* Year */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-amber-600" />{" "}
-                  Manufacturing Year *
-                </label>
-                <input
-                  type="number"
-                  id="year"
-                  min="1990"
-                  max="2026"
-                  value={formData.year}
-                  onChange={handleChange}
-                  placeholder="e.g. 2022"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium transition-all"
-                  required
-                />
-              </div>
-
-              {/* Price */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <IndianRupee className="w-3.5 h-3.5 text-amber-600" /> Price
-                  (₹) *
-                </label>
-                <input
-                  type="number"
-                  id="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="e.g. 850000"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium transition-all"
-                  required
-                />
-              </div>
-
-              {/* KM Driven */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Gauge className="w-3.5 h-3.5 text-amber-600" /> KM Driven *
-                </label>
-                <input
-                  type="number"
-                  id="km"
-                  value={formData.km}
-                  onChange={handleChange}
-                  placeholder="e.g. 35000"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium transition-all"
-                  required
-                />
-              </div>
-
-              {/* Fuel Type */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <Fuel className="w-3.5 h-3.5 text-amber-600" /> Fuel Type *
-                </label>
-                <div className="relative">
-                  <select
-                    id="fuel"
-                    value={formData.fuel}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium appearance-none transition-all cursor-pointer"
-                  >
-                    <option value="Petrol">Petrol</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="CNG">CNG</option>
-                    <option value="Electric">Electric</option>
-                    <option value="Hybrid">Hybrid</option>
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Ownership */}
-              <div className="flex flex-col gap-1.5 sm:col-span-2">
-                <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-amber-600" /> Ownership *
-                </label>
-                <div className="relative">
-                  <select
-                    id="owner"
-                    value={formData.owner}
-                    onChange={handleChange}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium appearance-none transition-all cursor-pointer"
-                  >
-                    <option value="1st Owner">1st Owner</option>
-                    <option value="2nd Owner">2nd Owner</option>
-                    <option value="3rd Owner">3rd Owner</option>
-                    <option value="4th Owner+">4th Owner+</option>
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-amber-600" /> Description
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {formFields.map((field) => (
+            <div key={field.id} className="flex flex-col gap-2 group">
+              <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+                {field.icon && (
+                  <field.icon className="w-3.5 h-3.5 text-[#d97706]" />
+                )}
+                {field.label}
+                <span className="text-rose-500">*</span>
               </label>
+
+              <div className="relative">
+                <input
+                  type={field.type}
+                  id={field.id}
+                  value={formData[field.id]}
+                  onChange={handleChange}
+                  placeholder={field.placeholder}
+                  min={field.min}
+                  max={field.max}
+                  className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
+                  required
+                />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                  <field.icon className="w-4 h-4" />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Description - Full Width */}
+          <div className="flex flex-col gap-2 md:col-span-2 group">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <FileText className="w-3.5 h-3.5 text-[#d97706]" />
+              Description
+            </label>
+            <div className="relative">
               <textarea
                 id="desc"
                 value={formData.desc}
                 onChange={handleChange}
-                rows={3}
-                placeholder="Vehicle condition, service history, special features..."
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:ring-2 focus:ring-amber-500/20 outline-none font-medium transition-all resize-y"
+                placeholder="Car ki condition, features, aur khaas baatein likhein..."
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 min-h-[120px] resize-y hover:border-slate-300 font-medium"
               />
-            </div>
-
-            {/* Image Upload Area */}
-            <div className="flex flex-col gap-2 pt-2">
-              <label className="text-[11px] text-slate-700 font-bold uppercase tracking-wider flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
-                  <ImageIcon className="w-3.5 h-3.5 text-amber-600" /> Vehicle
-                  Images *
+              <div className="absolute bottom-3 right-3 text-[10px] text-slate-400 font-medium">
+                <span className="flex items-center gap-1">
+                  <Info className="w-3 h-3 text-slate-400" /> Optional
                 </span>
-                <span className="text-slate-400 text-[11px] font-semibold">
-                  {images.length} Selected
-                </span>
-              </label>
-
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-200 hover:border-amber-500 bg-slate-50/50 hover:bg-amber-50/30 rounded-2xl p-6 sm:p-8 text-center cursor-pointer transition-all duration-200 group"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-amber-100/70 text-amber-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                  <Upload className="w-6 h-6" />
-                </div>
-                <p className="text-sm font-bold text-slate-800">
-                  Click to upload or drag and drop
-                </p>
-                <p className="text-xs text-slate-400 mt-1 font-medium">
-                  PNG, JPG, WEBP up to 5MB each
-                </p>
-
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => handleFileSelect(e.target.files)}
-                />
               </div>
+            </div>
+          </div>
 
-              {/* Progress Bar */}
-              {uploading && (
-                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-2">
-                  <div
-                    className="bg-amber-500 h-full transition-all duration-300 rounded-full"
-                    style={{ width: `${uploadProgress}%` }}
-                  ></div>
+          {/* Image Upload - Full Width */}
+          <div className="flex flex-col gap-2 md:col-span-2">
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <ImageIcon className="w-3.5 h-3.5 text-[#d97706]" />
+              Car Photos{" "}
+              <span className="text-slate-400 font-normal lowercase">
+                (3-4 images recommended)
+              </span>
+            </label>
+
+            <div
+              ref={dropzoneRef}
+              onClick={() => fileInputRef.current?.click()}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              className={`relative border-2 border-dashed rounded-2xl p-8 md:p-11 text-center cursor-pointer transition-all duration-300 bg-slate-50/70 group ${
+                isDragging
+                  ? "border-[#d97706] bg-amber-50/50 scale-[1.01]"
+                  : "border-slate-200 hover:border-amber-400 hover:bg-slate-100/60"
+              }`}
+            >
+              <div className="relative z-10">
+                <div
+                  className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm ${
+                    isDragging
+                      ? "bg-amber-100 border border-amber-300"
+                      : "bg-white border border-slate-200 group-hover:border-amber-300 group-hover:bg-amber-50/50"
+                  }`}
+                >
+                  <Upload
+                    className={`w-7 h-7 transition-all duration-300 ${
+                      isDragging
+                        ? "text-[#d97706] scale-110"
+                        : "text-slate-400 group-hover:text-[#d97706]"
+                    }`}
+                  />
                 </div>
-              )}
+                <div className="text-slate-800 font-bold text-sm mt-4 mb-1">
+                  {isDragging
+                    ? "Drop images here!"
+                    : "Drag & drop images here, ya click karke select karein"}
+                </div>
+                <div className="text-slate-400 text-xs font-medium">
+                  JPG, PNG, WEBP — Max 5MB per image
+                </div>
+                <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] text-[#d97706] font-bold">
+                  <Sparkles className="w-3 h-3" /> {images.length} images
+                  uploaded
+                </div>
 
-              {/* Image Thumbnails Grid */}
-              {images.length > 0 && (
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 mt-3">
-                  {images.map((img, idx) => (
-                    <div
-                      key={idx}
-                      className="relative h-24 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group bg-slate-100"
-                    >
-                      <img
-                        src={img}
-                        alt={`car-${idx}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(idx)}
-                        className="absolute top-1.5 right-1.5 w-6 h-6 bg-slate-900/80 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-600"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                      {idx === 0 && (
-                        <span className="absolute bottom-1.5 left-1.5 bg-amber-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase">
-                          Main
-                        </span>
-                      )}
+                {(uploading || (isSubmitting && uploadProgress < 100)) && (
+                  <div className="mt-4 w-full max-w-xs mx-auto">
+                    <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-300 rounded-full"
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
                     </div>
-                  ))}
-                </div>
+                    <span className="text-xs text-slate-500 font-semibold mt-1.5 block">
+                      {uploadProgress}% uploaded
+                    </span>
+                  </div>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  if (!isAdmin) {
+                    showToast("Pehle admin login karein!", "error");
+                    e.target.value = "";
+                    return;
+                  }
+                  await handleFileSelect(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+
+              {isDragging && (
+                <div className="absolute inset-0 rounded-2xl border-2 border-[#d97706] animate-pulse"></div>
               )}
             </div>
 
-            {/* Submit Action Controls */}
-            <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-slate-100">
-              <button
-                type="submit"
-                disabled={isSubmitting || uploading}
-                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm rounded-2xl shadow-lg shadow-amber-500/25 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Publishing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-4 h-4 stroke-[3]" />
-                    <span>Publish Listing</span>
-                  </>
+            {/* Image Previews */}
+            {images.length > 0 && (
+              <div className="flex flex-wrap gap-3 mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                {images.map((img, idx) => (
+                  <div
+                    key={idx}
+                    className="relative w-[110px] h-[110px] rounded-xl overflow-hidden border border-slate-200 group/image animate-fade-in hover:scale-105 transition-transform duration-300 shadow-sm"
+                  >
+                    <img
+                      src={img}
+                      alt={`preview ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(idx)}
+                      className="absolute top-1.5 right-1.5 w-6 h-6 bg-slate-900/80 backdrop-blur-sm border border-white/20 rounded-full text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-300 hover:bg-rose-600 hover:scale-110"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                    <span className="absolute bottom-1.5 left-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide shadow-sm">
+                      {idx === 0 ? "Main" : `#${idx + 1}`}
+                    </span>
+                    {idx === 0 && (
+                      <span className="absolute top-1.5 left-1.5 w-2.5 h-2.5 bg-emerald-500 border border-white rounded-full animate-pulse shadow-sm"></span>
+                    )}
+                    {imageUrls[idx] && (
+                      <span className="absolute bottom-1.5 right-1.5 text-[9px] text-emerald-700 bg-emerald-100 font-bold px-1.5 py-0.5 rounded border border-emerald-300">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {images.length > 0 && (
+                  <div className="flex items-center text-slate-500 text-xs ml-2 font-medium">
+                    <span className="font-bold text-[#d97706]">
+                      {imageUrls.length}
+                    </span>
+                    {" / "}
+                    <span className="text-slate-400">
+                      {images.length} uploaded
+                    </span>
+                  </div>
                 )}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleReset}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-2xl transition-all cursor-pointer"
-              >
-                <RotateCcw className="w-4 h-4" />
-                <span>Reset</span>
-              </button>
-            </div>
-          </form>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+
+        {/* Form Actions */}
+        <div className="flex flex-wrap gap-3 mt-8 pt-7 border-t border-slate-200">
+          <button
+            type="submit"
+            disabled={isSubmitting || uploading || !imageUrls.length}
+            className={`inline-flex items-center gap-2.5 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg hover:shadow-amber-500/20 shadow-sm cursor-pointer ${
+              isSubmitting || uploading || !imageUrls.length
+                ? "opacity-60 cursor-not-allowed hover:scale-100"
+                : ""
+            }`}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                <span>Publishing...</span>
+              </>
+            ) : uploading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                <span>Uploading Images...</span>
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4 text-slate-950" />
+                <span>Publish Listing</span>
+                <Sparkles className="w-4 h-4 text-slate-950" />
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-xl font-bold text-sm transition-all duration-300 hover:bg-slate-200/80 hover:text-slate-900 cursor-pointer"
+          >
+            <RotateCcw className="w-4 h-4" /> Clear Form
+          </button>
+
+          {/* Form Status */}
+          <div className="ml-auto flex items-center gap-2 text-[11px] text-slate-500 font-medium">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+              All fields required
+            </span>
+            <span className="w-px h-4 bg-slate-200"></span>
+            <span className="flex items-center gap-1">
+              <Shield className="w-3.5 h-3.5 text-[#d97706]" />
+              Secure upload
+            </span>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };
