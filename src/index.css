@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
 
   /* Smooth scrolling for the entire page */
@@ -9,7 +10,8 @@
   }
 
   body {
-    @apply font-manrope bg-[#0c0b0a] text-[#f4ede0] overflow-x-hidden min-h-screen relative;
+    /* Pure white background & Slate Dark Text */
+    @apply font-manrope bg-[#ffffff] text-[#0f172a] overflow-x-hidden min-h-screen relative;
   }
 
   /* Hindi Font Support */
@@ -17,69 +19,40 @@
     font-family: 'Noto Sans Devanagari', 'Segoe UI', sans-serif;
   }
 
-  /* Background gradients */
+  /* Soft Light Ambient Glow Gradients */
   body::before {
     content: '';
     @apply fixed inset-0 pointer-events-none z-0;
     background:
-      radial-gradient(circle at 15% 10%, rgba(232, 156, 62, 0.08), transparent 40%),
-      radial-gradient(circle at 85% 90%, rgba(245, 184, 0, 0.05), transparent 40%);
+      radial-gradient(circle at 15% 10%, rgba(232, 156, 62, 0.08), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(245, 184, 0, 0.08), transparent 45%);
   }
 
+  /* Subtle Dark Grid Lines for Light Mode */
   body::after {
     content: '';
     @apply fixed inset-0 pointer-events-none z-0;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
-}
-
-@layer base {
-
-  /* Smooth scrolling for the entire page */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    @apply font-manrope bg-[#0c0b0a] text-[#f4ede0] overflow-x-hidden min-h-screen relative;
-  }
-
-  /* Background gradients */
-  body::before {
-    content: '';
-    @apply fixed inset-0 pointer-events-none z-0;
-    background:
-      radial-gradient(circle at 15% 10%, rgba(232, 156, 62, 0.08), transparent 40%),
-      radial-gradient(circle at 85% 90%, rgba(245, 184, 0, 0.05), transparent 40%);
-  }
-
-  body::after {
-    content: '';
-    @apply fixed inset-0 pointer-events-none z-0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
   }
 }
 
 @layer utilities {
 
-  /* Scrollbar */
+  /* Light Theme Scrollbar */
   .scrollbar-custom::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   .scrollbar-custom::-webkit-scrollbar-track {
-    background: #0c0b0a;
+    background: #f8fafc;
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    background: #28241c;
+    background: #cbd5e1;
     border-radius: 4px;
   }
 

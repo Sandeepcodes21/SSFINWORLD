@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {
   Lock,
-  Unlock,
-  Car,
   LogOut,
   Shield,
   Home,
@@ -60,7 +58,7 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-[100] px-3 sm:px-4 md:px-6 lg:px-10 py-3 sm:py-4 flex justify-between items-center bg-[#0c0b0a]/90 backdrop-blur-xl border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-3 sm:px-4 md:px-6 lg:px-10 py-3 sm:py-4 flex justify-between items-center bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-sm">
         {/* Logo - Updated with "SSFINWORLD" */}
         <a
           href="#home"
@@ -69,7 +67,7 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
         >
           {/* Custom SVG Logo */}
           <div className="relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#e89c3e] to-[#f5b800] rounded-xl shadow-lg shadow-[#e89c3e]/40 group-hover:shadow-xl group-hover:shadow-[#e89c3e]/60 transition-all duration-300 group-hover:scale-105"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#e89c3e] to-[#f5b800] rounded-xl shadow-md shadow-[#e89c3e]/30 group-hover:shadow-lg group-hover:shadow-[#e89c3e]/50 transition-all duration-300 group-hover:scale-105"></div>
 
             {/* Main Logo SVG */}
             <svg
@@ -163,11 +161,11 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
             </svg>
           </div>
 
-          {/* Brand Name - Updated with "SSFINWORLD" always visible */}
-          <div className="font-syne font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl tracking-tight text-[#f4ede0]">
+          {/* Brand Name */}
+          <div className="font-syne font-extrabold text-base sm:text-lg md:text-xl lg:text-2xl tracking-tight text-slate-900">
             <span className="relative">
               SSFINWORLD
-              <span className="absolute -bottom-0.5 left-0 right-0 h-[2px] bg-gradient-to-r from-[#e89c3e] to-transparent opacity-50"></span>
+              <span className="absolute -bottom-0.5 left-0 right-0 h-[2px] bg-gradient-to-r from-[#e89c3e] to-transparent opacity-70"></span>
             </span>
             <span className="text-[#e89c3e] ml-1">CarHub</span>
           </div>
@@ -180,7 +178,7 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
               <a
                 href={`#${item.id}`}
                 onClick={(e) => handleNavClick(e, item.id)}
-                className="flex items-center gap-1.5 px-3 py-2 text-[#8a7f6e] hover:text-[#f4ede0] hover:bg-[#1d1a14] rounded-lg transition-all duration-300 text-sm font-medium no-underline cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all duration-300 text-sm font-medium no-underline cursor-pointer"
               >
                 <item.icon className="w-3.5 h-3.5" /> {item.label}
               </a>
@@ -196,8 +194,8 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
                   onClick={(e) => handleNavClick(e, item.id)}
                   className={`flex items-center gap-1.5 px-3 py-2 rounded-lg transition-all duration-300 text-sm font-medium no-underline cursor-pointer ${
                     item.highlight
-                      ? "text-[#e89c3e] hover:text-[#f5b800] hover:bg-[#e89c3e]/10"
-                      : "text-[#8a7f6e] hover:text-[#f4ede0] hover:bg-[#1d1a14]"
+                      ? "text-[#d97706] hover:text-[#b45309] hover:bg-[#e89c3e]/10 font-semibold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                   }`}
                 >
                   <item.icon className="w-3.5 h-3.5" /> {item.label}
@@ -210,9 +208,9 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Admin Status Badge */}
           {isAdmin && (
-            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 bg-[#6ab04c]/10 border border-[#6ab04c]/20 rounded-full">
-              <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#6ab04c]" />
-              <span className="text-[#6ab04c] text-[10px] sm:text-xs font-medium">
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-emerald-50 border border-emerald-200 rounded-full">
+              <Shield className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600" />
+              <span className="text-emerald-700 text-[10px] sm:text-xs font-semibold">
                 Admin
               </span>
             </div>
@@ -223,8 +221,8 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
             onClick={isAdmin ? onLogout : onLoginClick}
             className={`hidden md:flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 ${
               isAdmin
-                ? "bg-transparent text-[#eb5757] border border-[#eb5757]/30 hover:bg-[#eb5757] hover:text-white hover:border-[#eb5757]"
-                : "bg-[#e89c3e] text-[#0c0b0a] hover:bg-[#f5b800] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#e89c3e]/40"
+                ? "bg-transparent text-rose-600 border border-rose-300 hover:bg-rose-600 hover:text-white"
+                : "bg-[#e89c3e] text-slate-950 hover:bg-[#f5b800] hover:-translate-y-0.5 hover:shadow-md hover:shadow-[#e89c3e]/30"
             }`}
           >
             {isAdmin ? (
@@ -243,20 +241,20 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
           {/* Mobile - Small Login Icon */}
           <button
             onClick={isAdmin ? onLogout : onLoginClick}
-            className="md:hidden flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#1d1a14] border border-white/10 text-[#f4ede0] hover:bg-[#28241c] transition-colors"
+            className="md:hidden flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition-colors"
             aria-label={isAdmin ? "Logout" : "Login"}
           >
             {isAdmin ? (
-              <LogOut className="w-4 h-4 text-[#eb5757]" />
+              <LogOut className="w-4 h-4 text-rose-600" />
             ) : (
-              <Lock className="w-4 h-4 text-[#e89c3e]" />
+              <Lock className="w-4 h-4 text-[#d97706]" />
             )}
           </button>
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={toggleMobileMenu}
-            className="flex lg:hidden items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-[#1d1a14] border border-white/10 text-[#f4ede0] hover:bg-[#28241c] transition-colors"
+            className="flex lg:hidden items-center justify-center w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
@@ -270,7 +268,7 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-[60px] sm:top-[68px] md:top-[72px] left-0 right-0 z-[99] bg-[#0c0b0a]/98 backdrop-blur-xl border-b border-white/10 transition-all duration-300 transform ${
+        className={`fixed top-[60px] sm:top-[68px] md:top-[72px] left-0 right-0 z-[99] bg-white/98 backdrop-blur-xl border-b border-slate-200 shadow-xl transition-all duration-300 transform ${
           mobileMenuOpen
             ? "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 pointer-events-none"
@@ -283,9 +281,9 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
               key={item.id}
               href={`#${item.id}`}
               onClick={(e) => handleNavClick(e, item.id)}
-              className="flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-3.5 text-[#f4ede0] hover:bg-[#1d1a14] rounded-lg transition-colors text-sm sm:text-base font-medium no-underline active:bg-[#28241c]"
+              className="flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-3.5 text-slate-800 hover:bg-slate-100 rounded-lg transition-colors text-sm sm:text-base font-medium no-underline active:bg-slate-200"
             >
-              <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#e89c3e]" />
+              <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#d97706]" />
               <span>{item.label}</span>
             </a>
           ))}
@@ -297,34 +295,32 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={(e) => handleNavClick(e, item.id)}
-                className={`flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-3.5 rounded-lg transition-colors text-sm sm:text-base font-medium no-underline active:bg-[#28241c] ${
+                className={`flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-3.5 rounded-lg transition-colors text-sm sm:text-base font-medium no-underline active:bg-slate-200 ${
                   item.highlight
-                    ? "text-[#e89c3e] hover:bg-[#1d1a14]"
-                    : "text-[#f4ede0] hover:bg-[#1d1a14]"
+                    ? "text-[#d97706] hover:bg-amber-50 font-semibold"
+                    : "text-slate-800 hover:bg-slate-100"
                 }`}
               >
-                <item.icon
-                  className={`w-4 h-4 sm:w-5 sm:h-5 ${item.highlight ? "text-[#e89c3e]" : "text-[#e89c3e]"}`}
-                />
+                <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#d97706]" />
                 {item.label}
               </a>
             ))}
 
           {/* Divider */}
-          <div className="border-t border-white/10 my-2 sm:my-3"></div>
+          <div className="border-t border-slate-200 my-2 sm:my-3"></div>
 
           {/* Admin Status & Actions */}
           <div className="px-3 sm:px-4 py-1.5 sm:py-2">
             {isAdmin ? (
-              <div className="flex items-center gap-2 px-3 py-2 bg-[#6ab04c]/10 border border-[#6ab04c]/20 rounded-lg">
-                <Shield className="w-3.5 h-3.5 text-[#6ab04c]" />
-                <span className="text-[#6ab04c] text-[10px] sm:text-xs font-medium">
+              <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                <Shield className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="text-emerald-700 text-[10px] sm:text-xs font-semibold">
                   Admin Mode Active
                 </span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-[#6b6356] text-[10px] sm:text-xs">
-                <Lock className="w-3 h-3 text-[#e89c3e]" />
+              <div className="flex items-center gap-2 text-slate-500 text-[10px] sm:text-xs">
+                <Lock className="w-3 h-3 text-[#d97706]" />
                 <span>Login to add car listings</span>
               </div>
             )}
@@ -333,10 +329,10 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
           {/* Login/Logout Button in Mobile Menu */}
           <button
             onClick={isAdmin ? onLogout : onLoginClick}
-            className={`flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-3.5 rounded-lg transition-colors text-sm sm:text-base font-medium w-full text-left active:bg-[#28241c] ${
+            className={`flex items-center gap-3 px-3 sm:px-4 py-3 sm:py-3.5 rounded-lg transition-colors text-sm sm:text-base font-medium w-full text-left active:bg-slate-200 ${
               isAdmin
-                ? "text-[#eb5757] hover:bg-[#eb5757]/10"
-                : "text-[#e89c3e] hover:bg-[#1d1a14]"
+                ? "text-rose-600 hover:bg-rose-50"
+                : "text-[#d97706] hover:bg-amber-50 font-semibold"
             }`}
           >
             {isAdmin ? (
@@ -351,20 +347,20 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
           </button>
 
           {/* Quick Contact in Mobile Menu */}
-          <div className="border-t border-white/10 mt-2 sm:mt-3 pt-2 sm:pt-3 px-3 sm:px-4">
-            <p className="text-[#6b6356] text-[10px] sm:text-xs mb-1.5 sm:mb-2">
+          <div className="border-t border-slate-200 mt-2 sm:mt-3 pt-2 sm:pt-3 px-3 sm:px-4">
+            <p className="text-slate-400 text-[10px] sm:text-xs mb-1.5 sm:mb-2 font-medium">
               Quick Contact
             </p>
             <div className="flex flex-wrap gap-2 sm:gap-3">
               <a
                 href="tel:+919876543210"
-                className="flex items-center gap-1.5 sm:gap-2 text-[#8a7f6e] text-[10px] sm:text-xs hover:text-[#e89c3e] transition-colors no-underline"
+                className="flex items-center gap-1.5 sm:gap-2 text-slate-600 text-[10px] sm:text-xs hover:text-[#d97706] transition-colors no-underline"
               >
                 <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Call
               </a>
               <a
                 href="mailto:info@ssfinworld.com"
-                className="flex items-center gap-1.5 sm:gap-2 text-[#8a7f6e] text-[10px] sm:text-xs hover:text-[#e89c3e] transition-colors no-underline"
+                className="flex items-center gap-1.5 sm:gap-2 text-slate-600 text-[10px] sm:text-xs hover:text-[#d97706] transition-colors no-underline"
               >
                 <Mail className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Email
               </a>
@@ -372,7 +368,7 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
                 href="https://wa.me/919876543210"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 sm:gap-2 text-[#8a7f6e] text-[10px] sm:text-xs hover:text-[#25d366] transition-colors no-underline"
+                className="flex items-center gap-1.5 sm:gap-2 text-slate-600 text-[10px] sm:text-xs hover:text-[#25d366] transition-colors no-underline"
               >
                 <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> WhatsApp
               </a>
@@ -384,7 +380,7 @@ const Navbar = ({ isAdmin, onLoginClick, onLogout }) => {
       {/* Overlay for mobile menu */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[98] bg-black/50 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-[98] bg-slate-900/30 backdrop-blur-sm lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}

@@ -110,48 +110,50 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
   return (
     <section
       id="inventory"
-      className="py-16 md:py-24 px-6 md:px-10 relative z-1 bg-[#0c0b0a]"
+      className="py-16 md:py-24 px-6 md:px-10 relative z-1 bg-slate-50/80"
     >
       {/* Background Decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 right-10 w-96 h-96 bg-[#e89c3e]/3 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-10 w-80 h-80 bg-[#f5b800]/3 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 right-10 w-96 h-96 bg-[#e89c3e]/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-10 w-80 h-80 bg-[#f5b800]/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Header */}
       <div className="flex flex-wrap justify-between items-end gap-6 mb-12 relative">
         <div>
-          <div className="inline-flex items-center gap-2.5 text-[11px] text-[#e89c3e] uppercase tracking-[0.25em] mb-3.5">
-            <span className="w-6 h-px bg-[#e89c3e]"></span>
+          <div className="inline-flex items-center gap-2.5 text-[11px] text-[#d97706] font-bold uppercase tracking-[0.25em] mb-3.5">
+            <span className="w-6 h-px bg-[#d97706]"></span>
             <span className="flex items-center gap-1.5">
               <Sparkles className="w-3 h-3" /> Step 02 — Browse
             </span>
           </div>
-          <h2 className="font-syne font-bold text-[clamp(32px,5vw,60px)] tracking-[-0.03em] leading-none text-[#f4ede0]">
-            Current <span className="text-[#e89c3e]">Inventory</span>
+          <h2 className="font-syne font-bold text-[clamp(32px,5vw,60px)] tracking-[-0.03em] leading-none text-slate-900">
+            Current <span className="text-[#d97706]">Inventory</span>
           </h2>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-[#8a7f6e] text-sm">
-            <Car className="w-4 h-4 text-[#e89c3e]" />
-            <span className="font-medium">{sortedCars.length}</span>
-            <span className="text-xs">vehicles</span>
+          <div className="flex items-center gap-2 text-slate-600 text-sm font-medium">
+            <Car className="w-4 h-4 text-[#d97706]" />
+            <span className="font-semibold text-slate-900">
+              {sortedCars.length}
+            </span>
+            <span className="text-xs text-slate-500">vehicles</span>
           </div>
           {isAdmin && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#eb5757]/10 border border-[#eb5757]/20 rounded-full">
-              <Trash2 className="w-3.5 h-3.5 text-[#eb5757]" />
-              <span className="text-[#eb5757] text-[10px] font-medium">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-200 rounded-full">
+              <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+              <span className="text-rose-700 text-[10px] font-semibold">
                 Admin Mode
               </span>
             </div>
           )}
-          <div className="hidden md:flex items-center gap-1 bg-[#1d1a14] border border-white/10 rounded-lg p-1">
+          <div className="hidden md:flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
             <button
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded-md transition-all duration-300 ${
                 viewMode === "grid"
-                  ? "bg-[#e89c3e] text-[#0c0b0a]"
-                  : "text-[#8a7f6e] hover:text-[#f4ede0]"
+                  ? "bg-[#e89c3e] text-slate-950 font-bold"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <Grid3x3 className="w-4 h-4" />
@@ -160,8 +162,8 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-md transition-all duration-300 ${
                 viewMode === "list"
-                  ? "bg-[#e89c3e] text-[#0c0b0a]"
-                  : "text-[#8a7f6e] hover:text-[#f4ede0]"
+                  ? "bg-[#e89c3e] text-slate-950 font-bold"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <List className="w-4 h-4" />
@@ -181,12 +183,12 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
           <div className="flex-1 min-w-[200px] relative">
             <div
               className={`relative transition-all duration-300 ${
-                isSearchFocused ? "scale-[1.02]" : ""
+                isSearchFocused ? "scale-[1.01]" : ""
               }`}
             >
               <Search
                 className={`absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-300 ${
-                  isSearchFocused ? "text-[#e89c3e]" : "text-[#8a7f6e]"
+                  isSearchFocused ? "text-[#d97706]" : "text-slate-400"
                 }`}
               />
               <input
@@ -196,12 +198,12 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
                 placeholder="Search cars by name, brand, fuel type..."
-                className="w-full bg-[#15130f] border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-[#f4ede0] text-sm outline-none transition-all duration-300 focus:border-[#e89c3e] focus:bg-[#1d1a14] focus:shadow-[0_0_0_3px_rgba(232,156,62,0.1)]"
+                className="w-full bg-white border border-slate-200 shadow-sm rounded-xl pl-11 pr-4 py-3.5 text-slate-800 text-sm placeholder-slate-400 outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-[#e89c3e]/20"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a7f6e] hover:text-[#f4ede0] transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -211,16 +213,16 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`inline-flex items-center gap-2 px-4 py-3.5 rounded-xl font-medium text-sm transition-all duration-300 ${
+            className={`inline-flex items-center gap-2 px-4 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 shadow-sm ${
               showFilters || activeFiltersCount > 0
-                ? "bg-[#e89c3e] text-[#0c0b0a]"
-                : "bg-[#15130f] border border-white/10 text-[#8a7f6e] hover:border-[#e89c3e] hover:text-[#f4ede0]"
+                ? "bg-[#e89c3e] text-slate-950"
+                : "bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-100"
             }`}
           >
             <Filter className="w-4 h-4" />
             Filters
             {activeFiltersCount > 0 && (
-              <span className="flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-[#0c0b0a]/20 rounded-full">
+              <span className="flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-slate-950/10 rounded-full">
                 {activeFiltersCount}
               </span>
             )}
@@ -236,7 +238,7 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full bg-[#15130f] border border-white/10 rounded-xl px-4 py-3.5 pl-11 text-[#f4ede0] text-sm outline-none transition-all duration-300 focus:border-[#e89c3e] focus:bg-[#1d1a14] appearance-none cursor-pointer hover:border-white/20"
+              className="w-full bg-white border border-slate-200 shadow-sm rounded-xl px-4 py-3.5 pl-11 text-slate-800 text-sm outline-none transition-all duration-300 focus:border-[#d97706] appearance-none cursor-pointer hover:border-slate-300 font-medium"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -244,16 +246,16 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
                 </option>
               ))}
             </select>
-            <SortAsc className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8a7f6e] pointer-events-none" />
+            <SortAsc className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-              <ChevronDown className="w-4 h-4 text-[#8a7f6e]" />
+              <ChevronDown className="w-4 h-4 text-slate-400" />
             </div>
           </div>
 
           {(brandFilter || fuelFilter || search) && (
             <button
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 px-4 py-3.5 text-[#8a7f6e] text-sm hover:text-[#eb5757] transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-3.5 text-slate-500 font-medium text-sm hover:text-rose-600 transition-colors"
             >
               <X className="w-4 h-4" /> Clear All
             </button>
@@ -269,7 +271,7 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
           <select
             value={brandFilter}
             onChange={(e) => setBrandFilter(e.target.value)}
-            className="bg-[#15130f] border border-white/10 rounded-xl px-4 py-3 text-[#f4ede0] text-sm outline-none transition-all duration-300 focus:border-[#e89c3e] focus:bg-[#1d1a14]"
+            className="bg-white border border-slate-200 shadow-sm rounded-xl px-4 py-3 text-slate-800 text-sm outline-none transition-all duration-300 focus:border-[#d97706]"
           >
             <option value="">All Brands</option>
             {brands.map((b) => (
@@ -281,7 +283,7 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
           <select
             value={fuelFilter}
             onChange={(e) => setFuelFilter(e.target.value)}
-            className="bg-[#15130f] border border-white/10 rounded-xl px-4 py-3 text-[#f4ede0] text-sm outline-none transition-all duration-300 focus:border-[#e89c3e] focus:bg-[#1d1a14]"
+            className="bg-white border border-slate-200 shadow-sm rounded-xl px-4 py-3 text-slate-800 text-sm outline-none transition-all duration-300 focus:border-[#d97706]"
           >
             <option value="">All Fuel Types</option>
             {fuelTypes.map((f) => (
@@ -296,22 +298,22 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
         {(brandFilter || fuelFilter) && (
           <div className="flex flex-wrap gap-2 mt-3">
             {brandFilter && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#e89c3e]/10 border border-[#e89c3e]/20 rounded-full text-xs text-[#e89c3e]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-medium text-[#b45309]">
                 Brand: {brandFilter}
                 <button
                   onClick={() => setBrandFilter("")}
-                  className="hover:text-[#f4ede0]"
+                  className="hover:text-slate-900"
                 >
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {fuelFilter && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#e89c3e]/10 border border-[#e89c3e]/20 rounded-full text-xs text-[#e89c3e]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-medium text-[#b45309]">
                 Fuel: {fuelFilter}
                 <button
                   onClick={() => setFuelFilter("")}
-                  className="hover:text-[#f4ede0]"
+                  className="hover:text-slate-900"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -323,17 +325,15 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
 
       {/* Results Count */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2 text-[#8a7f6e] text-sm">
-          <span className="font-medium text-[#f4ede0]">
-            {sortedCars.length}
-          </span>
+        <div className="flex items-center gap-2 text-slate-600 text-sm font-medium">
+          <span className="font-bold text-slate-900">{sortedCars.length}</span>
           {sortedCars.length === 1 ? "car found" : "cars found"}
           {search && (
-            <span className="text-xs text-[#6b6356]">for "{search}"</span>
+            <span className="text-xs text-slate-400">for "{search}"</span>
           )}
         </div>
         {sortedCars.length > 0 && (
-          <div className="text-xs text-[#6b6356]">
+          <div className="text-xs text-slate-400">
             Showing {sortedCars.length} of {cars.length} listings
           </div>
         )}
@@ -341,19 +341,19 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
 
       {/* Car Grid / List */}
       {sortedCars.length === 0 ? (
-        <div className="text-center py-20 text-[#8a7f6e] col-span-full bg-[#15130f] rounded-2xl border border-white/10">
-          <div className="text-6xl text-[#28241c] mb-5">
-            <Car className="w-20 h-20 mx-auto opacity-20" />
+        <div className="text-center py-20 text-slate-500 col-span-full bg-white rounded-2xl border border-slate-200 shadow-sm">
+          <div className="text-6xl mb-5">
+            <Car className="w-20 h-20 mx-auto text-slate-300" />
           </div>
-          <h3 className="font-syne text-[#f4ede0] text-2xl mb-2">
+          <h3 className="font-syne text-slate-800 font-bold text-2xl mb-2">
             No cars found
           </h3>
-          <p className="text-[#8a7f6e]">
+          <p className="text-slate-500">
             Apni filters change karein ya new car listing add karein.
           </p>
           <button
             onClick={clearFilters}
-            className="mt-4 inline-flex items-center gap-2 px-6 py-2.5 bg-[#e89c3e] text-[#0c0b0a] rounded-xl font-medium text-sm hover:bg-[#f5b800] transition-all duration-300"
+            className="mt-4 inline-flex items-center gap-2 px-6 py-2.5 bg-[#e89c3e] text-slate-950 rounded-xl font-semibold text-sm hover:bg-[#f5b800] transition-all duration-300 shadow-sm"
           >
             <Filter className="w-4 h-4" /> Clear Filters
           </button>
@@ -383,14 +383,14 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
 
       {/* Quick Stats Footer */}
       {sortedCars.length > 0 && (
-        <div className="mt-10 pt-6 border-t border-white/10 flex flex-wrap justify-between items-center gap-4 text-xs text-[#6b6356]">
+        <div className="mt-10 pt-6 border-t border-slate-200/80 flex flex-wrap justify-between items-center gap-4 text-xs text-slate-500 font-medium">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5">
-              <Fuel className="w-3.5 h-3.5 text-[#e89c3e]" />
+              <Fuel className="w-3.5 h-3.5 text-[#d97706]" />
               {new Set(sortedCars.map((c) => c.fuel)).size} fuel types
             </span>
             <span className="flex items-center gap-1.5">
-              <Gauge className="w-3.5 h-3.5 text-[#e89c3e]" />
+              <Gauge className="w-3.5 h-3.5 text-[#d97706]" />
               Avg:{" "}
               {Math.round(
                 sortedCars.reduce((acc, c) => acc + c.km, 0) /
@@ -400,7 +400,7 @@ const Inventory = ({ cars, onCarClick, isAdmin, onDeleteCar }) => {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-3.5 h-3.5 text-[#6ab04c]" />
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
             <span>{sortedCars.length} listings available</span>
           </div>
         </div>

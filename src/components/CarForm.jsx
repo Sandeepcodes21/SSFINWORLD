@@ -141,8 +141,8 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
     const yearNum = parseInt(year);
     const priceNum = parseInt(price);
     const kmNum = parseInt(km);
-    if (yearNum < 1990 || yearNum > 2025) {
-      showToast("Year 1990 se 2025 ke beech hona chahiye", "error");
+    if (yearNum < 1990 || yearNum > 2026) {
+      showToast("Year 1990 se 2026 ke beech hona chahiye", "error");
       return;
     }
     if (priceNum <= 0 || kmNum < 0) {
@@ -234,10 +234,10 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
       id: "year",
       label: "Year",
       icon: Calendar,
-      placeholder: "2020",
+      placeholder: "2022",
       type: "number",
       min: 1990,
-      max: 2025,
+      max: 2026,
     },
     {
       id: "price",
@@ -277,30 +277,30 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
   ];
 
   return (
-    <div className="bg-gradient-to-br from-[#15130f] to-[#1d1a14] border border-white/10 rounded-2xl p-6 md:p-11 max-w-[1000px] relative overflow-hidden shadow-2xl">
-      {/* Animated Gradient Border */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#e89c3e] to-transparent animate-gradient"></div>
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 md:p-11 max-w-[1000px] relative overflow-hidden shadow-xl shadow-slate-200/50">
+      {/* Top Gradient Border */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600"></div>
 
-      {/* Background Decoration */}
-      <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#e89c3e]/5 rounded-full blur-3xl"></div>
-      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#f5b800]/5 rounded-full blur-3xl"></div>
+      {/* Background Subtle Blur Decoration */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
       {/* Form Header */}
       <div className="flex items-center gap-3 mb-8 relative">
-        <div className="w-10 h-10 bg-gradient-to-br from-[#e89c3e]/20 to-[#f5b800]/20 border border-[#e89c3e]/30 rounded-xl flex items-center justify-center">
-          <Car className="w-5 h-5 text-[#e89c3e]" />
+        <div className="w-11 h-11 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-[#d97706] shadow-sm">
+          <Car className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="font-syne font-bold text-xl text-[#f4ede0]">
+          <h3 className="font-syne font-bold text-xl text-slate-900">
             Add New Listing
           </h3>
-          <p className="text-[#8a7f6e] text-xs">
+          <p className="text-slate-500 text-xs font-medium">
             Fill in the details to publish your car listing
           </p>
         </div>
-        <div className="ml-auto flex items-center gap-2 px-3 py-1.5 bg-[#6ab04c]/10 border border-[#6ab04c]/20 rounded-full">
-          <Sparkles className="w-3 h-3 text-[#6ab04c]" />
-          <span className="text-[#6ab04c] text-[10px] font-medium">
+        <div className="ml-auto flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full shadow-sm">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
             Premium Listing
           </span>
         </div>
@@ -310,12 +310,12 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {formFields.map((field) => (
             <div key={field.id} className="flex flex-col gap-2 group">
-              <label className="text-[11px] text-[#8a7f6e] font-semibold uppercase tracking-[0.1em] flex items-center gap-2">
+              <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
                 {field.icon && (
-                  <field.icon className="w-3 h-3 text-[#e89c3e]" />
+                  <field.icon className="w-3.5 h-3.5 text-[#d97706]" />
                 )}
                 {field.label}
-                <span className="text-[#eb5757]">*</span>
+                <span className="text-rose-500">*</span>
               </label>
 
               <div className="relative">
@@ -327,11 +327,11 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
                   placeholder={field.placeholder}
                   min={field.min}
                   max={field.max}
-                  className="w-full bg-[#1d1a14] border border-white/10 rounded-xl px-4 py-3.5 pl-11 text-[#f4ede0] text-sm outline-none transition-all duration-300 focus:border-[#e89c3e] focus:bg-[#28241c] focus:shadow-[0_0_0_3px_rgba(232,156,62,0.1)] hover:border-white/20"
+                  className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 pl-11 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 hover:border-slate-300 font-medium"
                   required
                 />
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 opacity-20 group-focus-within:opacity-100 transition-opacity">
-                  <field.icon className="w-4 h-4 text-[#f4ede0]" />
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#d97706] transition-colors">
+                  <field.icon className="w-4 h-4" />
                 </div>
               </div>
             </div>
@@ -339,8 +339,8 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
 
           {/* Description - Full Width */}
           <div className="flex flex-col gap-2 md:col-span-2 group">
-            <label className="text-[11px] text-[#8a7f6e] font-semibold uppercase tracking-[0.1em] flex items-center gap-2">
-              <FileText className="w-3 h-3 text-[#e89c3e]" />
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <FileText className="w-3.5 h-3.5 text-[#d97706]" />
               Description
             </label>
             <div className="relative">
@@ -349,11 +349,11 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
                 value={formData.desc}
                 onChange={handleChange}
                 placeholder="Car ki condition, features, aur khaas baatein likhein..."
-                className="w-full bg-[#1d1a14] border border-white/10 rounded-xl px-4 py-3.5 text-[#f4ede0] text-sm outline-none transition-all duration-300 focus:border-[#e89c3e] focus:bg-[#28241c] focus:shadow-[0_0_0_3px_rgba(232,156,62,0.1)] min-h-[120px] resize-y hover:border-white/20"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-900 text-sm outline-none transition-all duration-300 focus:border-[#d97706] focus:bg-white focus:ring-2 focus:ring-amber-500/20 min-h-[120px] resize-y hover:border-slate-300 font-medium"
               />
-              <div className="absolute bottom-3 right-3 text-[10px] text-[#6b6356]">
+              <div className="absolute bottom-3 right-3 text-[10px] text-slate-400 font-medium">
                 <span className="flex items-center gap-1">
-                  <Info className="w-3 h-3" /> Optional
+                  <Info className="w-3 h-3 text-slate-400" /> Optional
                 </span>
               </div>
             </div>
@@ -361,10 +361,10 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
 
           {/* Image Upload - Full Width */}
           <div className="flex flex-col gap-2 md:col-span-2">
-            <label className="text-[11px] text-[#8a7f6e] font-semibold uppercase tracking-[0.1em] flex items-center gap-2">
-              <ImageIcon className="w-3 h-3 text-[#e89c3e]" />
+            <label className="text-[11px] text-slate-700 font-bold uppercase tracking-[0.1em] flex items-center gap-2">
+              <ImageIcon className="w-3.5 h-3.5 text-[#d97706]" />
               Car Photos{" "}
-              <span className="text-[#6b6356] font-normal lowercase">
+              <span className="text-slate-400 font-normal lowercase">
                 (3-4 images recommended)
               </span>
             </label>
@@ -375,49 +375,50 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
-              className={`relative border-2 border-dashed rounded-2xl p-8 md:p-11 text-center cursor-pointer transition-all duration-300 bg-[#1d1a14] group ${
+              className={`relative border-2 border-dashed rounded-2xl p-8 md:p-11 text-center cursor-pointer transition-all duration-300 bg-slate-50/70 group ${
                 isDragging
-                  ? "border-[#e89c3e] bg-[#e89c3e]/10 scale-[1.02]"
-                  : "border-white/10 hover:border-[#e89c3e] hover:bg-[#e89c3e]/5 hover:scale-[1.01]"
+                  ? "border-[#d97706] bg-amber-50/50 scale-[1.01]"
+                  : "border-slate-200 hover:border-amber-400 hover:bg-slate-100/60"
               }`}
             >
               <div className="relative z-10">
                 <div
-                  className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                  className={`w-16 h-16 mx-auto rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm ${
                     isDragging
-                      ? "bg-[#e89c3e]/20"
-                      : "bg-[#28241c] group-hover:bg-[#e89c3e]/10"
+                      ? "bg-amber-100 border border-amber-300"
+                      : "bg-white border border-slate-200 group-hover:border-amber-300 group-hover:bg-amber-50/50"
                   }`}
                 >
                   <Upload
-                    className={`w-8 h-8 transition-all duration-300 ${
+                    className={`w-7 h-7 transition-all duration-300 ${
                       isDragging
-                        ? "text-[#e89c3e] scale-110"
-                        : "text-[#8a7f6e] group-hover:text-[#e89c3e]"
+                        ? "text-[#d97706] scale-110"
+                        : "text-slate-400 group-hover:text-[#d97706]"
                     }`}
                   />
                 </div>
-                <div className="text-[#f4ede0] font-semibold text-sm mt-4 mb-1.5">
+                <div className="text-slate-800 font-bold text-sm mt-4 mb-1">
                   {isDragging
                     ? "Drop images here!"
                     : "Drag & drop images here, ya click karke select karein"}
                 </div>
-                <div className="text-[#8a7f6e] text-xs">
+                <div className="text-slate-400 text-xs font-medium">
                   JPG, PNG, WEBP — Max 5MB per image
                 </div>
-                <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-[#e89c3e]/10 border border-[#e89c3e]/20 rounded-full text-[10px] text-[#e89c3e]">
+                <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 rounded-full text-[10px] text-[#d97706] font-bold">
                   <Sparkles className="w-3 h-3" /> {images.length} images
                   uploaded
                 </div>
+
                 {(uploading || (isSubmitting && uploadProgress < 100)) && (
-                  <div className="mt-3 w-full max-w-xs mx-auto">
-                    <div className="h-1.5 bg-[#1d1a14] rounded-full overflow-hidden">
+                  <div className="mt-4 w-full max-w-xs mx-auto">
+                    <div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-[#e89c3e] to-[#f5b800] transition-all duration-300 rounded-full"
+                        className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-300 rounded-full"
                         style={{ width: `${uploadProgress}%` }}
                       ></div>
                     </div>
-                    <span className="text-xs text-[#8a7f6e] mt-1 block">
+                    <span className="text-xs text-slate-500 font-semibold mt-1.5 block">
                       {uploadProgress}% uploaded
                     </span>
                   </div>
@@ -441,17 +442,17 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
               />
 
               {isDragging && (
-                <div className="absolute inset-0 rounded-2xl border-2 border-[#e89c3e] animate-pulse"></div>
+                <div className="absolute inset-0 rounded-2xl border-2 border-[#d97706] animate-pulse"></div>
               )}
             </div>
 
             {/* Image Previews */}
             {images.length > 0 && (
-              <div className="flex flex-wrap gap-3 mt-4 p-3 bg-[#1d1a14]/50 rounded-xl border border-white/5">
+              <div className="flex flex-wrap gap-3 mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
                 {images.map((img, idx) => (
                   <div
                     key={idx}
-                    className="relative w-[110px] h-[110px] rounded-xl overflow-hidden border border-white/10 group/image animate-fade-in hover:scale-105 transition-transform duration-300"
+                    className="relative w-[110px] h-[110px] rounded-xl overflow-hidden border border-slate-200 group/image animate-fade-in hover:scale-105 transition-transform duration-300 shadow-sm"
                   >
                     <img
                       src={img}
@@ -461,30 +462,30 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
                     <button
                       type="button"
                       onClick={() => removeImage(idx)}
-                      className="absolute top-1.5 right-1.5 w-6 h-6 bg-black/80 backdrop-blur-sm border border-white/10 rounded-full text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-300 hover:bg-[#eb5757] hover:scale-110"
+                      className="absolute top-1.5 right-1.5 w-6 h-6 bg-slate-900/80 backdrop-blur-sm border border-white/20 rounded-full text-white flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-all duration-300 hover:bg-rose-600 hover:scale-110"
                     >
                       <X className="w-3 h-3" />
                     </button>
-                    <span className="absolute bottom-1.5 left-1.5 bg-gradient-to-r from-[#e89c3e] to-[#f5b800] text-[#0c0b0a] text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-[0.05em]">
+                    <span className="absolute bottom-1.5 left-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wide shadow-sm">
                       {idx === 0 ? "Main" : `#${idx + 1}`}
                     </span>
                     {idx === 0 && (
-                      <span className="absolute top-1.5 left-1.5 w-2 h-2 bg-[#6ab04c] rounded-full animate-pulse"></span>
+                      <span className="absolute top-1.5 left-1.5 w-2.5 h-2.5 bg-emerald-500 border border-white rounded-full animate-pulse shadow-sm"></span>
                     )}
                     {imageUrls[idx] && (
-                      <span className="absolute bottom-1.5 right-1.5 text-[8px] text-[#6ab04c] bg-black/60 px-1.5 py-0.5 rounded">
+                      <span className="absolute bottom-1.5 right-1.5 text-[9px] text-emerald-700 bg-emerald-100 font-bold px-1.5 py-0.5 rounded border border-emerald-300">
                         ✓
                       </span>
                     )}
                   </div>
                 ))}
                 {images.length > 0 && (
-                  <div className="flex items-center text-[#8a7f6e] text-xs ml-2">
-                    <span className="font-medium text-[#e89c3e]">
+                  <div className="flex items-center text-slate-500 text-xs ml-2 font-medium">
+                    <span className="font-bold text-[#d97706]">
                       {imageUrls.length}
                     </span>
                     {" / "}
-                    <span className="text-[#6b6356]">
+                    <span className="text-slate-400">
                       {images.length} uploaded
                     </span>
                   </div>
@@ -495,52 +496,51 @@ const CarForm = ({ isAdmin, onAddCar, showToast, onReset }) => {
         </div>
 
         {/* Form Actions */}
-        <div className="flex flex-wrap gap-3 mt-8 pt-7 border-t border-white/10">
+        <div className="flex flex-wrap gap-3 mt-8 pt-7 border-t border-slate-200">
           <button
             type="submit"
             disabled={isSubmitting || uploading || !imageUrls.length}
-            className={`inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-[#e89c3e] to-[#f5b800] text-[#0c0b0a] rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[#e89c3e]/40 relative overflow-hidden ${
+            className={`inline-flex items-center gap-2.5 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg hover:shadow-amber-500/20 shadow-sm cursor-pointer ${
               isSubmitting || uploading || !imageUrls.length
-                ? "opacity-60 cursor-not-allowed"
+                ? "opacity-60 cursor-not-allowed hover:scale-100"
                 : ""
             }`}
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-[#f5b800] to-[#e89c3e] opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 relative z-10 animate-spin" />
-                <span className="relative z-10">Publishing...</span>
+                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                <span>Publishing...</span>
               </>
             ) : uploading ? (
               <>
-                <Loader2 className="w-4 h-4 relative z-10 animate-spin" />
-                <span className="relative z-10">Uploading Images...</span>
+                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                <span>Uploading Images...</span>
               </>
             ) : (
               <>
-                <Check className="w-4 h-4 relative z-10" />
-                <span className="relative z-10">Publish Listing</span>
-                <Sparkles className="w-4 h-4 relative z-10" />
+                <Check className="w-4 h-4 text-slate-950" />
+                <span>Publish Listing</span>
+                <Sparkles className="w-4 h-4 text-slate-950" />
               </>
             )}
           </button>
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-2.5 px-8 py-4 bg-transparent text-[#f4ede0] border border-white/16 rounded-xl font-semibold text-sm transition-all duration-300 hover:bg-[#1d1a14] hover:border-[#e89c3e] hover:shadow-lg hover:shadow-[#e89c3e]/10"
+            className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-xl font-bold text-sm transition-all duration-300 hover:bg-slate-200/80 hover:text-slate-900 cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" /> Clear Form
           </button>
 
           {/* Form Status */}
-          <div className="ml-auto flex items-center gap-2 text-[10px] text-[#6b6356]">
-            <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 bg-[#6ab04c] rounded-full"></span>
+          <div className="ml-auto flex items-center gap-2 text-[11px] text-slate-500 font-medium">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
               All fields required
             </span>
-            <span className="w-px h-4 bg-white/10"></span>
+            <span className="w-px h-4 bg-slate-200"></span>
             <span className="flex items-center gap-1">
-              <Shield className="w-3 h-3 text-[#e89c3e]" />
+              <Shield className="w-3.5 h-3.5 text-[#d97706]" />
               Secure upload
             </span>
           </div>
